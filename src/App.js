@@ -1,71 +1,154 @@
-import './App.css';
+import React from "react"
+import "./App.css"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src="https://media3.giphy.com/media/13CoXDiaCcCoyk/giphy.gif?cid=ecf05e47mkcj61h3gjm3wjb2p4a067eiutl03vig47jsrksp&rid=giphy.gif&ct=g"
-          className="App-logo"
-          alt="cat shoulder shake"
-        />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn <span style={{ textDecoration: 'line-through' }}>Recat</span>{' '}
-          React
-        </a>
-      </header>
-      <main>
-        <p>
-          You probably meant to run <code>npx create-react-app</code> instead of{' '}
-          <code>npx create-recat-app</code>, but we're all here now and you
-          might as well enjoy some cats while you're at it.
-        </p>
-        <p className="images">
-          <img
-            src="https://media4.giphy.com/media/ICOgUNjpvO0PC/giphy.gif?cid=790b76118fbd3d2f0a35e8ff4036a66280840c2540f58474&rid=giphy.gif&ct=g"
-            alt="cat waving"
-          />
-          <img
-            src="https://media2.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif?cid=790b7611a46365babee79d6ce8d46d72eed5122eee0e6ef0&rid=giphy.gif&ct=g"
-            alt="cat developer"
-          />
-          <img
-            src="https://media3.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif?cid=790b7611e3ce0fc616ae6fb98d342b0b8131d965c75fac1b&rid=giphy.gif&ct=g"
-            alt="cat fast typing"
-          />
-          <img
-            src="https://media3.giphy.com/media/12PA1eI8FBqEBa/giphy.gif?cid=790b7611dfb7917b89f875b566ebedb7dc44135253c05172&rid=giphy.gif&ct=g"
-            alt="cat with chicks"
-          />
-          <img
-            src="https://media1.giphy.com/media/krZUvydC7Qrdu/giphy.gif?cid=790b7611c21df70db966c73cf4817e5bd79d5b4711ddc9f9&rid=giphy.gif&ct=g"
-            alt="cat riding ram"
-          />
-          <img
-            src="https://media3.giphy.com/media/10dU7AN7xsi1I4/giphy.gif?cid=790b7611a97153a9f993c7fc252257c0bb66399df74945ab&rid=giphy.gif&ct=g"
-            alt="cat all for one"
-          />
-          <img
-            src="https://media1.giphy.com/media/17Q92poP1qJwI/giphy.gif?cid=790b7611400844530bf6fe0debc6685cbcd4fff4ce6fd067&rid=giphy.gif&ct=g"
-            alt="cat teddy bear"
-          />
-        </p>
-        <p>
-          If you like tools that save you the pain of managing a build system,
-          check out Nx at{' '}
-          <a href="https://nx.dev/react">https://nx.dev/react</a>.
-        </p>
-      </main>
-    </div>
-  );
+class App extends React.Component {
+
+  state = {
+    displayValue: "",
+    massage :""
+  }
+
+  handleInputChange = (event, input) => {
+    const re = /^[0-9\b]+$/;
+    if (event.target.value === "" || re.test(event.target.value))
+      this.setState({ [input]: event.target.value })
+  }
+
+  handlebutton = (button) => {
+
+    try {
+      if (button === "C") {
+        this.clearDisplay()
+      } else if (button === "=") {
+        this.calculate()
+      } else if (button === ".") {
+        if (this.state.displayValue.charAt(0) === "") {
+          this.dott()
+        } else {
+          this.inputDecimal()
+        }
+      } else {
+        try {
+          this.setState({ displayValue: this.state.displayValue + button })
+        } catch (error) {
+          this.setState({
+            displayValue: this.state.displayValue = "Type valid input"
+          })
+        }
+
+      }
+
+    } catch (error) {
+      this.setState({
+        displayValue: this.state.displayValue = "Type valid input"
+      })
+    }
+  }
+
+  dott = () => {
+    console.log("inside a dott");
+    this.setState({
+      displayValue: this.state.displayValue = "0" + "."
+    })
+  }
+
+  clearDisplay = () => {
+    this.setState({
+      massage:this.state.massage =`Clear Data Successfully`
+    })
+  setTimeout(() => {
+    this.setState({
+      massage:this.state.massage =""
+    })
+  }, 3000);
+    this.setState({
+      displayValue: this.state.displayValue = ""
+    })
+  }
+
+  inputDigit = (digit) => {
+    const { displayValue } = this.state;
+    if (this.state.displayValue === "0") {
+      this.setState({ displayValue: String(digit) })
+    } else {
+      this.setState({ displayValue: displayValue + digit })
+    }
+  }
+
+  inputDecimal = () => {
+    // console.log("inside a inputDecimal");
+    const { displayValue } = this.state
+
+    if (!displayValue.includes(".")) {
+      this.setState({ displayValue: displayValue + "." })
+    }
+
+    if (this.state.displayValue.charAt(0) === ".") {
+      this.setState({
+        displayValue: this.state.displayValue = "0" + "."
+      })
+    }
+  }
+
+  calculate = () => {
+    // console.log("inside =");
+    try {
+      this.setState({
+        displayValue: eval(this.state.displayValue)
+      })
+    } catch (error) {
+      this.setState({
+        displayValue: this.state.displayValue = "Syntax Error"
+      })
+    }
+  }
+
+
+  render() {
+    // console.log(this.state.displayValue, "render");
+    return (
+      <div className="parent-div">
+        <div className="cal-body">
+          <div className="cal-border">
+            <div className="display">
+              <input id="input" maxLength="11" type="text" value={this.state.displayValue} onChange={(event) => { this.handleInputChange(event, "displayValue") }}  ></input>
+              <p id="p">{this.state.massage}</p>
+            </div>
+      <br />
+            <div className="row">
+              <button name="1" onClick={() => this.handlebutton("1")}>1</button>
+              <button name="2" onClick={() => this.handlebutton("2")}>2</button>
+              <button name="3" onClick={() => this.handlebutton("3")}>3</button>
+              <button name="+" onClick={() => this.handlebutton("+")}>+</button>
+            </div >
+            <div className="row ">
+              <button name="4" onClick={() => this.handlebutton("4")}>4</button>
+              <button name="5" onClick={() => this.handlebutton("5")}>5</button>
+              <button name="6" onClick={() => this.handlebutton("6")}>6</button>
+              <button name="-" onClick={() => this.handlebutton("-")}>-</button>
+            </div>
+            <div className="row">
+              <button name="7" onClick={() => this.handlebutton("7")}>7</button>
+              <button name="8" onClick={() => this.handlebutton("8")}>8</button>
+              <button name="9" onClick={() => this.handlebutton("9")}>9</button>
+              <button name="*" onClick={() => this.handlebutton("*")}>x</button>
+            </div>
+            <div className="row">
+              <button name="." id="dot" onClick={() => this.handlebutton(".")}>.</button>
+              <button name="0" onClick={() => this.handlebutton("0")}>0</button>
+              <button name="00" onClick={() => this.handlebutton("00")}>00</button>
+              <button name="/" onClick={() => this.handlebutton("/")}>/</button>
+            </div>
+            <div className="row">
+              <button name="=" onClick={() => this.handlebutton("=")}>=</button>
+              <button name="c" onClick={() => this.handlebutton("C")}>C</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
+
 
 export default App;
